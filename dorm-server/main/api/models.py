@@ -250,7 +250,7 @@ class Account(models.Model):
     children -- количество детей в семье
     student_id -- ID студента в основной базе КЭУК
     citizenship -- гражданство
-    uin -- ИИн или номер паспорта
+    uin -- ИИН или номер паспорта
     address -- адрес проживания
     city -- город
     country -- страна
