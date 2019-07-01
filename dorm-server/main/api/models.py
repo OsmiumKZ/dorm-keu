@@ -205,6 +205,8 @@ class Parent(models.Model):
                                   null=True,
                                   verbose_name='Отчество')
     phone = models.CharField(max_length=20,
+                             blank=True,
+                             null=True,
                              verbose_name='Телефонный номер')
     
     class Meta:
@@ -230,7 +232,7 @@ class EducationalForm(models.Model):
         verbose_name_plural = 'Формы обучения'
         
     def __str__(self):
-        return self.name.ru
+        return self.name
 
 
 class Account(models.Model):
@@ -258,6 +260,10 @@ class Account(models.Model):
     email -- электронная почта
     privileges -- льготы
     """
+    login = models.CharField(max_length=255,
+                              verbose_name='Логин')
+    password = models.CharField(max_length=255,
+                              verbose_name='Пароль')
     name_f = models.CharField(max_length=100,
                               verbose_name='Имя')
     name_l = models.CharField(max_length=100,
