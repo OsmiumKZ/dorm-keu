@@ -65,7 +65,7 @@ class Floor(models.Model):
         verbose_name_plural = 'Этажи общежитий'
         
     def __str__(self):
-        return f"{self.dorm.name.ru} {number}"
+        return f"[{self.number} этаж] {self.dorm.name.ru}"
 
 
 class Room(models.Model):
@@ -93,8 +93,8 @@ class Room(models.Model):
         verbose_name_plural = 'Комнаты'
         
     def __str__(self):
-        return f'{self.floor.number} этаж, \
-             {self.number}{self.symbol}, max={self.max}'
+        return f'{self.floor.number} этаж, max({self.max}), \
+             {self.number}{self.symbol if self.symbol != None else ""}'
 
 
 class Gender(models.Model):
@@ -184,7 +184,8 @@ class Guardian(models.Model):
         
     def __str__(self):
         return f"{self.name_l} {str(self.name_f)[0]}.\
-            {str(self.patronymic)[0]}. ({self.phone})"
+            {str(self.patronymic)[0]+'.' if self.patronymic != None else ''} \
+                ({self.phone})"
 
 
 class Parent(models.Model):
@@ -215,7 +216,8 @@ class Parent(models.Model):
         
     def __str__(self):
         return f"{self.name_l} {str(self.name_f)[0]}.\
-            {str(self.patronymic)[0]}. ({self.phone})"
+            {str(self.patronymic)[0]+'.' if self.patronymic != None else ''} \
+                ({self.phone})"
 
 
 class EducationalForm(models.Model):
@@ -349,7 +351,8 @@ class Account(models.Model):
         
     def __str__(self):
         return f"{self.name_l} {str(self.name_f)[0]}. \
-            {str(self.patronymic)[0]}. ({self.phone})"
+            {str(self.patronymic)[0]+'.' if self.patronymic != None else ''} \
+                ({self.phone})"
 
 
 class Report(models.Model):
@@ -384,7 +387,8 @@ class Report(models.Model):
         
     def __str__(self):
         return f"{self.account.nama_l} {str(self.account.name_f)[0]}. \
-            {str(self.account.patronymic)[0]}. {self.room.number}{self.room.symbol}"
+            {str(self.account.patronymic)[0]+'.' if self.account.patronymic != None else ''} \
+                {self.room.number}{self.room.symbol}"
 
 
 class Request(models.Model):
@@ -417,4 +421,5 @@ class Request(models.Model):
         
     def __str__(self):
         return f"{self.account.nama_l} {str(self.account.name_f)[0]}. \
-        {str(self.account.patronymic)[0]}. {self.room.number}{self.room.symbol}"
+        {str(self.account.patronymic)[0]+'.' if self.account.patronymic != None else ''} \
+            {self.room.number}{self.room.symbol}"

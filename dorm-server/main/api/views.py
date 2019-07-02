@@ -2,9 +2,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework import status
-from . import serializers
-from . import models
+from . import serializers, models
 from django.db.models import Q
+from django.core.serializers import serialize
 import requests
 
 
@@ -21,7 +21,7 @@ def create_account(answer, educational_f, login, password):
         patronymic=answer.validated_data['parent_father']['patronymic'],
         phone=answer.validated_data['parent_father']['phone']
     )
-    row = models.Account.objects.create(
+    account = models.Account.objects.create(
         login=login,
         password=password,
         student_id=answer.validated_data['id'],
@@ -42,6 +42,7 @@ def create_account(answer, educational_f, login, password):
         parent_mother=mother,
         parent_father=father
     )
+    return serializers.AccountSerializer(account).data
 
 
 def update_parent(answer, id, type_parent):
@@ -56,12 +57,20 @@ def update_parent(answer, id, type_parent):
         pass
 
 
+def account_to_json(login, password):
+    account = models.Account.objects.get(
+        Q(login=login),
+        Q(password=password)
+    )
+    return serializers.AccountSerializer(account).data
+
+
 def update_account(answer, account, educational_f, login, password):
     if account.parent_mother_id:
         update_parent(answer, account.parent_mother_id, 'parent_mother')
 
     if account.parent_father_id:
-        update_parent(answer, account.parent_mother_id, 'parent_father')
+        update_parent(answer, account.parent_father_id, 'parent_father')
 
     account.login = login
     account.password = password
@@ -81,13 +90,13 @@ def update_account(answer, account, educational_f, login, password):
     account.privileges = answer.validated_data['privileges']
     account.group = answer.validated_data['group']
     account.save()
-    return account
+    return account_to_json(login, password)
 
 
 @api_view(['POST'])
 @permission_classes((AllowAny,))
 def auth_account(request):
-    body = serializers.AuthAccount(data=request.data)
+    body = serializers.AuthAccountSerializer(data=request.data)
     if body.is_valid():
         body.validated_data['password']
         response = requests.post(
@@ -98,7 +107,7 @@ def auth_account(request):
             }
         )
         if response.status_code == 200:
-            answer = serializers.ParseAccount(data=response.json())
+            answer = serializers.ParseAccountSerializer(data=response.json())
             if answer.is_valid():
                 try:
                     educational_form = models.EducationalForm.objects.get(
