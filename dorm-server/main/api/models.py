@@ -238,7 +238,7 @@ class EducationalForm(models.Model):
 
 
 class Account(models.Model):
-    """Акаунты.
+    """аккаунты.
 
     Описание полей:
     name_f -- имя
@@ -346,8 +346,8 @@ class Account(models.Model):
                                   verbose_name='Льготы')
     
     class Meta:
-        verbose_name = 'Акаунт'
-        verbose_name_plural = 'Акаунты'
+        verbose_name = 'аккаунт'
+        verbose_name_plural = 'аккаунты'
         
     def __str__(self):
         return f"{self.name_l} {str(self.name_f)[0]}. \
@@ -359,22 +359,24 @@ class Report(models.Model):
     """Отчёты.
 
     Описание полей:
-    account -- ссылка на акаунт
+    account -- ссылка на аккаунт
     room -- ссылка на комнату общежития
     status -- ссылка на статус отчёта
+    active -- состояние где: 1-завершен, 0-активен
     date_create -- дата и время создания отчёта
     date_update -- дата и время обновления отчёта
     date_residence -- дата заселения
     """
     account = models.ForeignKey(Account, 
                                 on_delete=models.CASCADE,
-                                verbose_name='Акаунт')
+                                verbose_name='Аккаунт')
     room = models.ForeignKey(Room, 
                              on_delete=models.CASCADE,
                              verbose_name='Комната')
     status = models.ForeignKey(Status, 
                                on_delete=models.CASCADE,
                                verbose_name='Статус отчёта')
+    active = models.PositiveIntegerField(verbose_name='Слушатель активности')
     date_create = models.DateTimeField(auto_now_add=True,
                                        verbose_name='Дата создания')
     date_update = models.DateTimeField(auto_now=True,
@@ -386,7 +388,7 @@ class Report(models.Model):
         verbose_name_plural = 'Отчёты'
         
     def __str__(self):
-        return f"{self.account.nama_l} {str(self.account.name_f)[0]}. \
+        return f"{self.account.name_l} {str(self.account.name_f)[0]}. \
             {str(self.account.patronymic)[0]+'.' if self.account.patronymic != None else ''} \
                 {self.room.number}{self.room.symbol}"
 
@@ -395,7 +397,7 @@ class Request(models.Model):
     """Заявления.
 
     Описание полей:
-    account -- ссылка на акаунт
+    account -- ссылка на аккаунт
     room -- ссылка на комнату общежития
     active -- слушатель на чтение заявления
     date_create -- дата и время создания отчёта
@@ -404,7 +406,7 @@ class Request(models.Model):
     """
     account = models.ForeignKey(Account, 
                                 on_delete=models.CASCADE,
-                                verbose_name='Акаунт')
+                                verbose_name='аккаунт')
     room = models.ForeignKey(Room, 
                              on_delete=models.CASCADE,
                              verbose_name='Комната')
@@ -420,6 +422,6 @@ class Request(models.Model):
         verbose_name_plural = 'Заявления'
         
     def __str__(self):
-        return f"{self.account.nama_l} {str(self.account.name_f)[0]}. \
+        return f"{self.account.name_l} {str(self.account.name_f)[0]}. \
         {str(self.account.patronymic)[0]+'.' if self.account.patronymic != None else ''} \
             {self.room.number}{self.room.symbol}"

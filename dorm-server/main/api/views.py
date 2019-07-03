@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
-from rest_framework import status
+from rest_framework import status, generics
 from . import serializers, models
 from django.db.models import Q
 from django.core.serializers import serialize
@@ -141,3 +141,77 @@ def auth_account(request):
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
     return Response(status=status.HTTP_409_CONFLICT)
+
+
+class ReportsViewAPI(generics.ListCreateAPIView):
+    """Класс позволяет создавать и получать экземпляры отчёты."""
+    serializer_class = serializers.ReportSerializer
+    permission_classes = (AllowAny,)
+
+    def get_queryset(self):
+        return models.Report.objects.filter(active=0)
+
+
+class RequestsViewAPI(generics.ListCreateAPIView):
+    """Класс позволяет создавать и получать экземпляры заявления."""
+    serializer_class = serializers.RequestSerializer
+    permission_classes = (AllowAny,)
+
+    def get_queryset(self):
+        return models.Request.objects.filter(active=0)
+
+
+class ReportViewAPI(generics.RetrieveUpdateDestroyAPIView):
+    """Класс позволяет удалять, изменять и получать экземпляр отчёта."""
+    queryset = models.Report.objects.all()
+    serializer_class = serializers.ReportSerializer
+    permission_classes = (AllowAny,)
+
+
+class RequestViewAPI(generics.RetrieveUpdateDestroyAPIView):
+    """Класс позволяет удалять, изменять и получать экземпляр заявления."""
+    queryset = models.Request.objects.all()
+    serializer_class = serializers.RequestSerializer
+    permission_classes = (AllowAny,)
+
+
+@api_view(['GET'])
+@permission_classes((AllowAny,))
+def reports_sort(request):
+    """Метод выводит сортированные отчёты."""
+    if request.headers.get('Educationalform') != None:
+        report_list = models.Report.objects.filter(account__educational_form__id=request.headers.get('Educationalform'))
+    elif request.headers.get('Gender') != None:
+        report_list = models.Report.objects.filter(account__gender__id=request.headers.get('Gender'))
+    elif request.headers.get('Children') != None:
+        report_list = models.Report.objects.order_by('account__children').reverse()
+    elif request.headers.get('Datecreate') != None:
+        report_list = models.Report.objects.order_by('date_create').reverse()
+    elif request.headers.get('Dateupdate') != None:
+        report_list = models.Report.objects.order_by('date_update').reverse()
+    elif request.headers.get('All') != None:
+        report_list = models.Report.objects.all()
+    else:
+        report_list = models.Report.objects.filter(active=0)
+    return Response(serializers.ReportSerializer(report_list, many=True).data)
+    
+
+@api_view(['GET'])
+@permission_classes((AllowAny,))
+def requests_sort(request):
+    """Метод выводит сортированные заявления."""
+    if request.headers.get('Educationalform') != None:
+        request_list = models.Request.objects.filter(account__educational_form__id=request.headers.get('Educationalform'))
+    elif request.headers.get('Gender') != None:
+        request_list = models.Request.objects.filter(account__gender__id=request.headers.get('Gender'))
+    elif request.headers.get('Children') != None:
+        request_list = models.Request.objects.order_by('account__children').reverse()
+    elif request.headers.get('Datecreate') != None:
+        request_list = models.Request.objects.order_by('date_create').reverse()
+    elif request.headers.get('Dateupdate') != None:
+        request_list = models.Request.objects.order_by('date_update').reverse()
+    elif request.headers.get('All') != None:
+        request_list = models.Request.objects.all()
+    else:
+        request_list = models.Request.objects.filter(active=0)
+    return Response(serializers.RequestSerializer(request_list, many=True).data)

@@ -40,3 +40,15 @@ class AccountSerializer(serializers.ModelSerializer):
         model = models.Account
         fields = '__all__'
         depth = 2
+
+
+class RequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Request
+        fields = '__all__'
+
+
+class ReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Report
+        fields = '__all__'
