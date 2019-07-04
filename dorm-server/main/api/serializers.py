@@ -52,3 +52,33 @@ class ReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Report
         fields = '__all__'
+
+
+class DormSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Dorm
+        fields = '__all__'
+
+
+class GenderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Gender
+        fields = '__all__'
+
+
+class NameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Name
+        fields = '__all__'
+
+
+class RoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Room
+        fields = '__all__'
+
+
+class FloorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Floor
+        fields = '__all__'

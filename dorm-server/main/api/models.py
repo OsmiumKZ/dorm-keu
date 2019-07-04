@@ -390,7 +390,7 @@ class Report(models.Model):
     def __str__(self):
         return f"{self.account.name_l} {str(self.account.name_f)[0]}. \
             {str(self.account.patronymic)[0]+'.' if self.account.patronymic != None else ''} \
-                {self.room.number}{self.room.symbol}"
+                [Комната {self.room.number}{self.room.symbol if self.room.symbol != None else ''}]"
 
 
 class Request(models.Model):

@@ -9,4 +9,7 @@ urlpatterns = [
     path('report/<int:pk>/', views.ReportViewAPI.as_view()),
     path('requests/', views.RequestsViewAPI.as_view()),
     path('request/<int:pk>/', views.RequestViewAPI.as_view()),
+    path('db/', views.db_base),
+    path('statistic/', views.statistic),
+    path('floor/<int:pk>/rooms/', views.rooms_floor),
 ]
