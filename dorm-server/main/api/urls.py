@@ -12,4 +12,6 @@ urlpatterns = [
     path('db/', views.db_base),
     path('statistic/', views.statistic),
     path('floor/<int:pk>/rooms/', views.rooms_floor),
+    path('doc/download/direction/<int:pk>/', views.send_direction_file),
+    path('doc/download/request/<int:pk>/', views.send_request_file)
 ]
