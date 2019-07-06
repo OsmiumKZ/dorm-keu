@@ -42,16 +42,30 @@ class AccountSerializer(serializers.ModelSerializer):
         depth = 2
 
 
-class RequestSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Request
-        fields = '__all__'
+class RequestSerializer:
+    class Read(serializers.ModelSerializer):
+        class Meta:
+            model = models.Request
+            fields = '__all__'
+            depth = 3
+
+    class All(serializers.ModelSerializer):
+        class Meta:
+            model = models.Request
+            fields = '__all__'
 
 
-class ReportSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Report
-        fields = '__all__'
+class ReportSerializer:
+    class Read(serializers.ModelSerializer):
+        class Meta:
+            model = models.Report
+            fields = '__all__'
+            depth = 3
+
+    class All(serializers.ModelSerializer):
+        class Meta:
+            model = models.Report
+            fields = '__all__'
 
 
 class DormSerializer(serializers.ModelSerializer):

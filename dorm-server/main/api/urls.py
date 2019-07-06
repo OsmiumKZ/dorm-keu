@@ -3,8 +3,8 @@ from . import views
 
 urlpatterns = [
     path('auth/account/', views.auth_account),
-    path('reports/sort/', views.reports_sort),
-    path('requests/sort/', views.requests_sort),
+    path('reports/sort/', views.ReportsSortViewAPI.as_view()),
+    path('requests/sort/', views.RequestsSortViewAPI.as_view()),
     path('reports/', views.ReportsViewAPI.as_view()),
     path('report/<int:pk>/', views.ReportViewAPI.as_view()),
     path('requests/', views.RequestsViewAPI.as_view()),

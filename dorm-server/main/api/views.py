@@ -17,8 +17,15 @@ def auth_account(request):
 
 class ReportsViewAPI(generics.ListCreateAPIView):
     """Класс позволяет создавать и получать экземпляры отчёты."""
-    serializer_class = serializers.ReportSerializer
     permission_classes = (AllowAny,)
+
+    def get(self, request, *args, **kwargs):
+        self.serializer_class = serializers.ReportSerializer.Read
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.serializer_class = serializers.ReportSerializer.All
+        return self.create(request, *args, **kwargs)
 
     def get_queryset(self):
         return models.Report.objects.filter(active=0)
@@ -26,8 +33,15 @@ class ReportsViewAPI(generics.ListCreateAPIView):
 
 class RequestsViewAPI(generics.ListCreateAPIView):
     """Класс позволяет создавать и получать экземпляры заявления."""
-    serializer_class = serializers.RequestSerializer
     permission_classes = (AllowAny,)
+
+    def get(self, request, *args, **kwargs):
+        self.serializer_class = serializers.RequestSerializer.Read
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.serializer_class = serializers.RequestSerializer.All
+        return self.create(request, *args, **kwargs)
 
     def get_queryset(self):
         return models.Request.objects.filter(active=0)
@@ -36,39 +50,35 @@ class RequestsViewAPI(generics.ListCreateAPIView):
 class ReportViewAPI(generics.RetrieveUpdateDestroyAPIView):
     """Класс позволяет удалять, изменять и получать экземпляр отчёта."""
     queryset = models.Report.objects.all()
-    serializer_class = serializers.ReportSerializer
+    serializer_class = serializers.ReportSerializer.All
     permission_classes = (AllowAny,)
 
 
 class RequestViewAPI(generics.RetrieveUpdateDestroyAPIView):
     """Класс позволяет удалять, изменять и получать экземпляр заявления."""
     queryset = models.Request.objects.all()
-    serializer_class = serializers.RequestSerializer
+    serializer_class = serializers.RequestSerializer.All
     permission_classes = (AllowAny,)
 
 
-@api_view(['GET'])
-@permission_classes((AllowAny,))
-def reports_sort(request):
-    """Метод выводит сортированные отчёты."""
-    return Response(
-        serializers.RequestSerializer(
-            utils.get_sort_data(models.Report.objects, request),
-            many=True
-        ).data
-    )
+class ReportsSortViewAPI(generics.ListAPIView):
+    """Класс сортирует отчёты."""
+    serializer_class = serializers.ReportSerializer.Read
+    permission_classes = (AllowAny,)
+
+    def get(self, request, *args, **kwargs):
+        self.queryset = utils.get_sort_data(models.Report.objects, request)
+        return self.list(request, *args, **kwargs)
 
 
-@api_view(['GET'])
-@permission_classes((AllowAny,))
-def requests_sort(request):
-    """Метод выводит сортированные заявления."""
-    return Response(
-        serializers.RequestSerializer(
-            utils.get_sort_data(models.Request.objects, request),
-            many=True
-        ).data
-    )
+class RequestsSortViewAPI(generics.ListAPIView):
+    """Класс сортирует заявления."""
+    serializer_class = serializers.RequestSerializer.Read
+    permission_classes = (AllowAny,)
+
+    def get(self, request, *args, **kwargs):
+        self.queryset = utils.get_sort_data(models.Request.objects, request)
+        return self.list(request, *args, **kwargs)
 
 
 @api_view(['GET'])
