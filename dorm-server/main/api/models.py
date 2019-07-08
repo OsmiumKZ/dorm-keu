@@ -238,7 +238,7 @@ class EducationalForm(models.Model):
 
 
 class Account(models.Model):
-    """аккаунты.
+    """Аккаунты.
 
     Описание полей:
     name_f -- имя
@@ -261,6 +261,7 @@ class Account(models.Model):
     phone -- телефонный номер
     email -- электронная почта
     privileges -- льготы
+    token -- ключ безопасности
     """
     login = models.CharField(max_length=255,
                               verbose_name='Логин')
@@ -344,6 +345,8 @@ class Account(models.Model):
                                   blank=True, 
                                   null=True,
                                   verbose_name='Льготы')
+    token = models.CharField(max_length=40,
+                             verbose_name='Ключ')
     
     class Meta:
         verbose_name = 'аккаунт'

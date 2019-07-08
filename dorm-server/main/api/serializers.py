@@ -42,6 +42,31 @@ class AccountSerializer(serializers.ModelSerializer):
         depth = 2
 
 
+class GuardianSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Guardian
+        fields = '__all__'
+
+
+class OrphanageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Orphanage
+        fields = '__all__'
+
+
+class StudentSerializer:
+    class Read(serializers.ModelSerializer):
+        class Meta:
+            model = models.Account
+            fields = '__all__'
+            depth = 2
+
+    class All(serializers.ModelSerializer):
+        class Meta:
+            model = models.Account
+            fields = '__all__'
+
+
 class RequestSerializer:
     class Read(serializers.ModelSerializer):
         class Meta:

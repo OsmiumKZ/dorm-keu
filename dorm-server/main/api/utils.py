@@ -4,6 +4,7 @@ from . import serializers, models
 from rest_framework.response import Response
 from django.db.models import Q
 from rest_framework import status
+from random import randrange
 import requests
 
 
@@ -39,7 +40,8 @@ def create_account(answer, educational_f, login, password):
         privileges=answer.validated_data['privileges'],
         group=answer.validated_data['group'],
         parent_mother=mother,
-        parent_father=father
+        parent_father=father,
+        token=generate_token(40)
     )
     return serializers.AccountSerializer(account).data
 
@@ -88,6 +90,7 @@ def update_account(answer, account, educational_f, login, password):
     account.email = answer.validated_data['email']
     account.privileges = answer.validated_data['privileges']
     account.group = answer.validated_data['group']
+    account.token = generate_token(40)
     account.save()
     return account_to_json(login, password)
 
@@ -207,3 +210,21 @@ def get_rooms_floor(pk):
     return room_list
 
 
+def generate_token(amount):
+    """Генерация нового токена."""
+    token = ''
+    digit = "0123456789"
+    lower = "abcdefghijklmnopqrstuvwxyz"
+    upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+    for i in range(amount):
+        index = randrange(3)
+
+        if index == 0:
+            token = token + digit[randrange(len(digit))]
+        elif index == 1:
+            token = token + lower[randrange(len(lower))]
+        elif index == 2:
+            token = token + upper[randrange(len(upper))]
+
+    return token
